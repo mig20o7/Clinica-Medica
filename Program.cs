@@ -275,13 +275,24 @@ namespace ClinicaMedica
                 filtroAtual = (TipoServico)s;
         }
 
-        // Chama o paciente de maior prioridade. Se houver filtro de servico
-        // ativo, chama o de maior prioridade dentro daquele servico.
+        
+        // Chama o paciente de maior prioridade.
+        // Se houver filtro ativo, prioriza aquele servico.
+        // Quando o servico ficar vazio, remove o filtro automaticamente.
         private static void ChamarProximo()
         {
             List<Paciente> candidatos = filtroAtual == null
                 ? listaDeEspera
-                : Algoritmos.FiltrarPorServico(listaDeEspera, filtroAtual.Value);
+                : Algoritmos.FiltrarPorServico(
+                    listaDeEspera, filtroAtual.Value);
+
+            // Remove o filtro caso nao existam candidatos
+            // daquele servico, mas ainda existam pacientes.
+            if (candidatos.Count == 0 && filtroAtual != null)
+            {
+                filtroAtual = null;
+                candidatos = listaDeEspera;
+            }
 
             int indice = Algoritmos.SelecionarProximo(candidatos);
 
@@ -294,9 +305,19 @@ namespace ClinicaMedica
             Paciente p = candidatos[indice];
             RemoverDaLista(p);
 
+            // Verifica se ainda existem pacientes do servico filtrado.
+            if (filtroAtual != null)
+            {
+                List<Paciente> restantes =
+                    Algoritmos.FiltrarPorServico(
+                        listaDeEspera, filtroAtual.Value);
+
+                if (restantes.Count == 0)
+                    filtroAtual = null;
+            }
+
             Avisar("CHAMANDO: " + Descrever(p), false);
         }
-
         private static void RemoverDaLista(Paciente p)
         {
             for (int i = 0; i < listaDeEspera.Count; i++)
@@ -308,7 +329,6 @@ namespace ClinicaMedica
                 }
             }
         }
-
         private static int LerInteiro(string texto)
         {
             while (true)
