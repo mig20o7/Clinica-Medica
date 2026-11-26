@@ -42,7 +42,7 @@ Algoritmos.cs	Algoritmos de ordenação, busca e seleção
 Program.cs	Tela, menu e ações do console
 Como executar
 
-Requisito: .NET SDK [VERSÃO] ou Visual Studio com o componente "Desenvolvimento para desktop com .NET".
+Requisito: .NET 10 SDK ou Microsoft Visual Studio com suporte ao .NET 10 e o componente de desenvolvimento para desktop com .NET.
 
 Pelo Visual Studio: abrir o arquivo de projeto (.csproj ou .sln) e pressionar F5.
 
